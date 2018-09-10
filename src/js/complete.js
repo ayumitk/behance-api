@@ -60,3 +60,9 @@ if (storageData) {
       document.querySelector('#behance-projects').innerHTML = `<small>Parsing failed : ${ex}</small>`;
     });
 }
+
+/*-------------------------------------------------------------------------------
+  Copyright
+-------------------------------------------------------------------------------*/
+const date = new Date();
+document.querySelector('#copyright-year').innerHTML = date.getFullYear();
