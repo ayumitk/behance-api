@@ -39,8 +39,8 @@ function projectList(data) {
 }
 
 
-// If sessionStorage has a json data, use it.
-// If not, get data form Behance API and set it to sessionStorage.
+// If sessionStorage has a json data, create project list with it.
+// If not, fetch json data form Behance API and then set it to sessionStorage.
 // Behance limits the API by 150 requests per hour.
 const storageData = sessionStorage.getItem(session);
 if (storageData) {
