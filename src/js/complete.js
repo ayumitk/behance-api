@@ -1,32 +1,27 @@
-/*-------------------------------------------------------------------------------
-  Behance User
--------------------------------------------------------------------------------*/
+import fetchJsonp from 'fetch-jsonp';
 
-// Define Variables
+/*-------------------------------------------------------------------------------
+  Behance
+-------------------------------------------------------------------------------*/
 const userID = 'ayumitk';
 const apiKey = '5AGtA6uAQot7srZlfWYtj1kZUXSuHx0S';
 const perPage = 6;
-const url = `https://www.behance.net/v2/users/${userID}/projects?callback=?&api_key=${apiKey}&per_page=${perPage}&callback=projectCallback`;
-const session = 'behanceUserProject';
 
+const url = `https://api.behance.net/v2/users/${userID}/projects?client_id=${apiKey}&per_page=${perPage}`;
 
-function projectList() {
-  // Get json data
-  const behanceData = JSON.parse(sessionStorage.getItem(session));
+const session = 'behanceProject';
 
+// Create projects list
+function projectList(data) {
   let resultHTML = '';
 
-  // Create projects list
-  behanceData.forEach((project) => {
-    let fieldList = '';
-    project.fields.forEach((field) => {
-      fieldList += `<span class="mr-1">${field}</span>`;
-    });
+  data.forEach((project) => {
+    const fieldList = project.fields.map(field => `<span class="mr-1">${field}</span>`);
 
     resultHTML += `
       <div class="col-md-4 mb-5">
         <div class="card shadow-sm">
-          <a href="work.html?projectID=${project.id}">
+          <a href="#project-${project.id}">
             <div class="card-image"><img class="card-img-top" src="${project.covers[404]}" alt=""></div>
             <div class="card-body">
               <p class="card-text">${project.name}</p>
@@ -39,32 +34,29 @@ function projectList() {
       </div>`;
   });
 
-  // Set all project contents to html
-  document.querySelector('#behance-list').innerHTML = resultHTML;
+  // Set all project list to html
+  document.querySelector('#behance-projects').innerHTML = resultHTML;
 }
 
 
 // If sessionStorage has a json data, use it.
 // If not, get data form Behance API and set it to sessionStorage.
 // Behance limits the API by 150 requests per hour.
-if (sessionStorage.getItem(session)) {
-  projectList();
+const storageData = sessionStorage.getItem(session);
+if (storageData) {
+  projectList(JSON.parse(storageData));
 } else {
-  // Create <script> tag
-  const script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src = url;
-  document.querySelector('head').appendChild(script);
+  // Fetch jsonp data
+  fetchJsonp(url, {
+    jsonpCallback: 'callback',
+  })
+    .then(response => response.json()).then((json) => {
+      // Insert data to session storage
+      sessionStorage.setItem(session, JSON.stringify(json.projects));
 
-  // Callback function
-  const projectCallback = (data) => {
-    // Set data to sessionStorage
-    const sessionData = JSON.stringify(data.projects);
-    sessionStorage.setItem(session, sessionData);
-
-    projectList();
-  };
-
-  // to use as a global function
-  window.projectCallback = projectCallback;
+      //  Create project list
+      projectList(json.projects);
+    }).catch((ex) => {
+      document.querySelector('#behance-projects').innerHTML = `<small>Parsing failed : ${ex}</small>`;
+    });
 }
