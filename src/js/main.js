@@ -1,30 +1,20 @@
+import fetchJsonp from 'fetch-jsonp';
+
 /*-------------------------------------------------------------------------------
   Behance
 -------------------------------------------------------------------------------*/
-
-// Define Variables
 const userID = 'ayumitk';
 const apiKey = '5AGtA6uAQot7srZlfWYtj1kZUXSuHx0S';
 const perPage = 6;
-const url = `https://api.behance.net/v2/users/${userID}/projects?callback=?&api_key=${apiKey}&per_page=${perPage}&callback=projectCallback`;
 
-// Create <script> tag
-const script = document.createElement('script');
-script.type = 'text/javascript';
-script.src = url;
-document.querySelector('head').appendChild(script);
+const url = `https://api.behance.net/v2/users/${userID}/projects?client_id=${apiKey}&per_page=${perPage}`;
 
-// Callback function
-const projectCallback = (data) => {
+// Create projects list
+function projectList(data) {
   let resultHTML = '';
 
-  // Create projects list
-  data.projects.forEach((project) => {
-    let fieldList = '';
-    project.fields.forEach((field) => {
-      fieldList += `<span class="mr-1">${field}</span>`;
-    });
-
+  data.forEach((project) => {
+    const fieldList = project.fields.map(field => `<span class="mr-1">${field}</span>`);
 
     resultHTML += `
       <div class="col-md-4 mb-5">
@@ -42,12 +32,20 @@ const projectCallback = (data) => {
       </div>`;
   });
 
-  // Set all project contents to html
+  // Set all project list to html
   document.querySelector('#behance-projects').innerHTML = resultHTML;
-};
+}
 
-// to use as a global function
-window.projectCallback = projectCallback;
+
+// Fetch jsonp data
+fetchJsonp(url, {
+  jsonpCallback: 'callback',
+})
+  .then(response => response.json()).then((json) => {
+    projectList(json.projects);
+  }).catch((ex) => {
+    document.querySelector('#behance-projects').innerHTML = `Parsing failed : ${ex}`;
+  });
 
 
 /*-------------------------------------------------------------------------------
