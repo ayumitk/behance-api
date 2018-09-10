@@ -19,7 +19,7 @@ function projectList(data) {
     const fieldList = project.fields.map(field => `<span class="mr-1">${field}</span>`).join('');
 
     resultHTML += `
-      <div class="col-md-4 mb-5">
+      <div class="col-sm-6 col-lg-4 mb-5">
         <div class="card shadow-sm">
           <a href="#project-${project.id}">
             <div class="card-image"><img class="card-img-top" src="${project.covers[404]}" alt=""></div>
