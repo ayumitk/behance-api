@@ -16,7 +16,7 @@ function projectList(data) {
   let resultHTML = '';
 
   data.forEach((project) => {
-    const fieldList = project.fields.map(field => `<span class="mr-1">${field}</span>`);
+    const fieldList = project.fields.map(field => `<span class="mr-1">${field}</span>`).join('');
 
     resultHTML += `
       <div class="col-md-4 mb-5">
