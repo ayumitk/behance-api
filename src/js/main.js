@@ -19,7 +19,7 @@ function projectList(data) {
     resultHTML += `
       <div class="col-md-4 mb-5">
         <div class="card shadow-sm">
-          <a href="work.html?projectID=${project.id}">
+          <a href="#project-${project.id}">
             <div class="card-image"><img class="card-img-top" src="${project.covers[404]}" alt=""></div>
             <div class="card-body">
               <p class="card-text">${project.name}</p>
@@ -44,7 +44,7 @@ fetchJsonp(url, {
   .then(response => response.json()).then((json) => {
     projectList(json.projects);
   }).catch((ex) => {
-    document.querySelector('#behance-projects').innerHTML = `Parsing failed : ${ex}`;
+    document.querySelector('#behance-projects').innerHTML = `<small>Parsing failed : ${ex}</small>`;
   });
 
 
