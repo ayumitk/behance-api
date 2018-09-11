@@ -28,7 +28,7 @@ const webpackConfig = require('./webpack.config');
 gulp.task('server', ['webpack', 'sass', 'html'], () => {
   browserSync.init({
     server: './docs/',
-    cors: true
+    cors: true,
   });
 
   gulp.watch('src/scss/*.scss', ['sass']);
@@ -48,7 +48,7 @@ gulp.task('webpack', () => webpackStream(webpackConfig, webpack)
 gulp.task('html', () => {
   gulp.src('./src/*.html')
     .pipe(htmlmin({
-      collapseWhitespace: true
+      collapseWhitespace: true,
     }))
     .pipe(gulp.dest('./docs/'))
     .pipe(browserSync.reload({
@@ -60,18 +60,18 @@ gulp.task('html', () => {
 gulp.task('sass', () => gulp.src('src/scss/*.scss')
 
   .pipe(plumber({
-    errorHandler: notify.onError('Error: <%= error.message %>')
+    errorHandler: notify.onError('Error: <%= error.message %>'),
   }))
 
   .pipe(autoprefixer({
     browsers: ['last 2 versions'],
-    cascade: false
+    cascade: false,
   }))
 
   .pipe(csscomb())
 
   .pipe(sass({
-    outputStyle: 'compressed'
+    outputStyle: 'compressed',
   }).on('error', sass.logError))
 
   .pipe(gulp.dest('./docs/css'))

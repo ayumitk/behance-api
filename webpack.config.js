@@ -6,11 +6,11 @@ module.exports = {
   // Entry point
   entry: {
     main: './src/js/main.js',
-    complete: './src/js/complete.js'
+    complete: './src/js/complete.js',
   },
 
   output: {
-    filename: '[name].js'
+    filename: '[name].js',
   },
 
   module: {
@@ -25,11 +25,11 @@ module.exports = {
             // Enable transformation of ES6 module syntax to another module type.
             // Setting this to false will not transform modules.
             ['env', {
-              modules: false
-            }]
-          ]
-        }
-      }]
-    }]
-  }
+              modules: false,
+            }],
+          ],
+        },
+      }],
+    }],
+  },
 };
